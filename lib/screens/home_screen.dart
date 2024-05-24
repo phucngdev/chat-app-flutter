@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<ChatUser> _searchList = [];
   bool _isSearching = false;
 
+  @override
   void initState() {
     super.initState();
     APIs.getSelfInfo();
@@ -44,9 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: IconButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ProfileScreen(user: APIs.me)));
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ProfileScreen(user: APIs.me),
+                  ),
+                );
               },
               icon: CircleAvatar(
                 backgroundImage: NetworkImage(APIs.me.image),
@@ -72,9 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (i.name.toLowerCase().contains(val.toLowerCase()) ||
                             i.email.toLowerCase().contains(val.toLowerCase())) {
                           _searchList.add(i);
-                          setState(() {
-                            _searchList;
-                          });
+                          setState(
+                            () {
+                              _searchList;
+                            },
+                          );
                         }
                       }
                     },
@@ -83,9 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
             actions: [
               IconButton(
                 onPressed: () {
-                  setState(() {
-                    _isSearching = !_isSearching;
-                  });
+                  setState(
+                    () {
+                      _isSearching = !_isSearching;
+                    },
+                  );
                 },
                 icon: Icon(
                   _isSearching
@@ -136,17 +143,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               [];
                           if (_list.isNotEmpty) {
                             return ListView.builder(
-                                itemCount: _isSearching
-                                    ? _searchList.length
-                                    : _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return ChatUserCard(
-                                      user: _isSearching
-                                          ? _searchList[index]
-                                          : _list[index]);
-                                });
+                              itemCount: _isSearching
+                                  ? _searchList.length
+                                  : _list.length,
+                              padding: EdgeInsets.only(top: mq.height * .01),
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return ChatUserCard(
+                                  user: _isSearching
+                                      ? _searchList[index]
+                                      : _list[index],
+                                );
+                              },
+                            );
                           } else {
                             return const Center(
                               child: Text("No users found"),
@@ -167,60 +176,74 @@ class _HomeScreenState extends State<HomeScreen> {
     String email = '';
 
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              contentPadding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 20, bottom: 10),
-
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-
-              //title
-              title: const Row(
-                children: [
-                  Icon(
-                    Icons.person_add,
-                    color: Colors.blue,
-                    size: 28,
-                  ),
-                  Text('  Add User')
-                ],
+      context: context,
+      builder: (_) => AlertDialog(
+        contentPadding: const EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 20,
+          bottom: 10,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: const Row(
+          children: [
+            Icon(
+              Icons.person_add,
+              color: Colors.blue,
+              size: 28,
+            ),
+            Text('  Add User')
+          ],
+        ),
+        content: TextFormField(
+          maxLines: null,
+          onChanged: (value) => email = value,
+          decoration: InputDecoration(
+            hintText: 'Email',
+            prefixIcon: const Icon(Icons.email, color: Colors.blue),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.blue, fontSize: 16),
+            ),
+          ),
+          MaterialButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              if (email.isNotEmpty) {
+                await APIs.addChatUser(email).then(
+                  (value) {
+                    if (!value) {
+                      Dialogs.showSnackbar(
+                        context,
+                        'User does not Exists!',
+                      );
+                    }
+                  },
+                );
+              }
+            },
+            child: const Text(
+              'Add',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 16,
               ),
-
-              //content
-              content: TextFormField(
-                maxLines: null,
-                onChanged: (value) => email = value,
-                decoration: InputDecoration(
-                    hintText: 'Email Id',
-                    prefixIcon: const Icon(Icons.email, color: Colors.blue),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15))),
-              ),
-              actions: [
-                MaterialButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel',
-                        style: TextStyle(color: Colors.blue, fontSize: 16))),
-                MaterialButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                      if (email.isNotEmpty) {
-                        await APIs.addChatUser(email).then((value) {
-                          if (!value) {
-                            Dialogs.showSnackbar(
-                                context, 'User does not Exists!');
-                          }
-                        });
-                      }
-                    },
-                    child: const Text(
-                      'Add',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
-                    ))
-              ],
-            ));
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

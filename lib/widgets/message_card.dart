@@ -223,52 +223,60 @@ class _MessageCardState extends State<MessageCard> {
     String updatedMsg = widget.message.msg;
 
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              contentPadding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 20, bottom: 10),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              title: const Row(
-                children: [
-                  Icon(
-                    Icons.message,
-                    color: Colors.blue,
-                    size: 28,
-                  ),
-                  Text(' Update Message')
-                ],
-              ),
-              content: TextFormField(
-                initialValue: updatedMsg,
-                maxLines: null,
-                onChanged: (value) => updatedMsg = value,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15))),
-              ),
-              actions: [
-                MaterialButton(
-                    onPressed: () {
-                      if (!mounted) return;
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
-                    )),
-                MaterialButton(
-                    onPressed: () {
-                      if (!mounted) return;
-                      Navigator.pop(context);
-                      APIs.updateMessage(widget.message, updatedMsg);
-                    },
-                    child: const Text(
-                      'Update',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
-                    ))
-              ],
-            ));
+      context: context,
+      builder: (_) => AlertDialog(
+        contentPadding: const EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 20,
+          bottom: 10,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(
+              Icons.message,
+              color: Colors.blue,
+              size: 28,
+            ),
+            Text(' Update Message')
+          ],
+        ),
+        content: TextFormField(
+          initialValue: updatedMsg,
+          maxLines: null,
+          onChanged: (value) => updatedMsg = value,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+        ),
+        actions: [
+          MaterialButton(
+            onPressed: () {
+              if (!mounted) return;
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.blue, fontSize: 16),
+            ),
+          ),
+          MaterialButton(
+            onPressed: () {
+              if (!mounted) return;
+              Navigator.pop(context);
+              APIs.updateMessage(widget.message, updatedMsg);
+            },
+            child: const Text(
+              'Update',
+              style: TextStyle(color: Colors.blue, fontSize: 16),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
