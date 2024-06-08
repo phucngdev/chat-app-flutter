@@ -1,16 +1,30 @@
-# chat
+# chathub
 
-A new Flutter project.
+- ứng dụng chat trên ios sử dụng dịch vụ firebase
+- storage + firestore + authen
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+yêu cầu có sẵn môi trường chạy flutter
+dứoi đây là hướng dẫn chạy dự án với VScode
 
-A few resources to get you started if this is your first Flutter project:
+clone mã nguồn từ github
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- git clone https://github.com/phucngdev/chat-app-flutter.git
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+cd vào thư mục chứa mã nguồn
+
+- cd your repository
+
+cài đặt các thư viện cần thiết
+
+- flutter pub get
+
+kiểm tra cấu hình dự án
+
+- flutter doctor
+
+chạy dự án
+
+- cmd + shift + p => select device => ios simulator
+- flutter run hoặc start debugging
