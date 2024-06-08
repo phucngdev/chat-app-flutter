@@ -54,7 +54,7 @@ class _SplastScreenState extends State<SplastScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Welcome to We Chat"),
+        title: const Text("Welcome to Chathub"),
       ),
       body: Stack(
         children: [

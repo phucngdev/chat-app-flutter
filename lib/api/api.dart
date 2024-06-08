@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -68,6 +67,24 @@ class APIs {
     }
   }
 
+  static Future<bool> deleteFriend(String email) async {
+    final data = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('friends')
+          .doc(data.docs.first.id)
+          .delete();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // sửa thông tin
   static Future<void> updateUserInfo() async {
     await firestore.collection('users').doc(user.uid).update({
@@ -81,7 +98,6 @@ class APIs {
     await firestore.collection('users').doc(user.uid).get().then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
-        // await getFirebaseMessagingToken();
         APIs.updateActiveStatus(true);
       } else {
         await createUser().then((value) => getSelfInfo());
@@ -98,8 +114,9 @@ class APIs {
     });
   }
 
+  // đổi ảnh profile
   static Future<void> updateProfilePicture(File file) async {
-    final ext = file.path.split('.').last;
+    final ext = file.path.split('.').last; // lấy định dạng đuôi ảnh
     final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
     await ref
         .putFile(file, SettableMetadata(contentType: 'image/$ext'))
@@ -111,15 +128,17 @@ class APIs {
         .update({'image': me.image});
   }
 
+  // lấy tất cả bạn bè của 1 user
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
       List<String> userIds) {
     return firestore
         .collection('users')
         .where('id', whereIn: userIds.isEmpty ? [''] : userIds)
-        // .where('id', isNotEqualTo: user.uid)
+        .where('id', isNotEqualTo: user.uid)
         .snapshots();
   }
 
+  // lấy thông tin 1 user
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
       ChatUser chatUser) {
     return firestore
@@ -137,7 +156,7 @@ class APIs {
         .snapshots();
   }
 
-  //
+  // tạo id
   static String getConversationID(String id) => user.uid.hashCode <= id.hashCode
       ? '${user.uid}_$id'
       : '${id}_${user.uid}';
@@ -165,9 +184,9 @@ class APIs {
     final ref = firestore
         .collection('chats/${getConversationID(chatUser.id)}/messages/');
     await ref.doc(time).set(message.toJson());
-    // sendPushNotification(chatUser, type == Type.text ? msg : 'image'));
   }
 
+  // gửi tin nhắn lần đầu
   static Future<void> sendFirstMessage(
       ChatUser chatUser, String msg, Type type) async {
     await firestore
@@ -180,18 +199,20 @@ class APIs {
 
   // gửi ảnh
   static Future<void> sendChatImage(ChatUser chatUser, File file) async {
-    final ext = file.path.split('.').last;
+    final ext =
+        file.path.split('.').last; // lấy phần đuôi của file ảnh (jpg, png)
     final ref = storage.ref().child(
         'images/${getConversationID(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
     await ref
         .putFile(file, SettableMetadata(contentType: 'image/$ext'))
         .then((p0) {
-      log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
+      log('dung lượng file: ${p0.bytesTransferred / 1000} kb');
     });
     final imageUrl = await ref.getDownloadURL();
     await sendMessage(chatUser, imageUrl, Type.image);
   }
 
+  // đổi trạng thái của tin nhắn sang đã đọc
   static Future<void> updateMessageReadStatus(Message message) async {
     firestore
         .collection('chats/${getConversationID(message.fromId)}/messages/')
@@ -199,6 +220,7 @@ class APIs {
         .update({'read': DateTime.now().millisecondsSinceEpoch.toString()});
   }
 
+  // lấy tin nhắn cuối cùng của user
   static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
       ChatUser user) {
     return firestore
@@ -208,17 +230,18 @@ class APIs {
         .snapshots();
   }
 
+  // xóa tin nhắn
   static Future<void> deleteMessage(Message message) async {
     await firestore
         .collection('chats/${getConversationID(message.toId)}/messages/')
         .doc(message.sent)
         .delete();
-
     if (message.type == Type.image) {
       await storage.refFromURL(message.msg).delete();
     }
   }
 
+  // sửa tin nhắn
   static Future<void> updateMessage(Message message, String updatedMsg) async {
     await firestore
         .collection('chats/${getConversationID(message.toId)}/messages/')

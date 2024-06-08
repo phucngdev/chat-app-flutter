@@ -44,13 +44,13 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
+	<true/>		
 
-
+	<!-- config để truy cập thư viện ảnh, camera, lưu ảnh về thư viện ảnh -->
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library</string>
+	<string>We need access to your photo library to upload your profile picture.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera</string>
+	<string>We need access to your camera to take a profile picture.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need permission to add photos to your library</string>
 	<!-- Google Sign-in Section -->

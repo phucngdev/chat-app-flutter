@@ -1,13 +1,10 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:chat/api/api.dart';
 import 'package:chat/helper/dialogs.dart';
 import 'package:chat/main.dart';
-import 'package:chat/models/chat_user.dart';
 import 'package:chat/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -85,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text("Welcome to We Chat"),
+          title: const Text("Welcome to Chathub"),
         ),
         body: Stack(
           children: [

@@ -2,12 +2,10 @@ import 'package:chat/api/api.dart';
 import 'package:chat/helper/dialogs.dart';
 import 'package:chat/main.dart';
 import 'package:chat/models/chat_user.dart';
-import 'package:chat/screens/auth/login_screen.dart';
 import 'package:chat/screens/profile_screen.dart';
 import 'package:chat/widgets/chat_user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,14 +15,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<ChatUser> _list = [];
-  final List<ChatUser> _searchList = [];
-  bool _isSearching = false;
+  List<ChatUser> _list = []; // danh sách bạn bè
+  final List<ChatUser> _searchList = []; // danh sách khi search
+  bool _isSearching = false; // kiểm tra xem có phải đg search không
 
+  //
   @override
   void initState() {
     super.initState();
-    APIs.getSelfInfo();
+    APIs.getSelfInfo(); // gọi api lấy thông tin của bản thân
   }
 
   @override
@@ -70,8 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     autofocus: true,
                     style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
                     onChanged: (val) {
-                      _searchList.clear();
+                      _searchList
+                          .clear(); // clear danh sách search mỗi khi change value
                       for (var i in _list) {
+                        // tìm kiếm theo tên hoặc email
                         if (i.name.toLowerCase().contains(val.toLowerCase()) ||
                             i.email.toLowerCase().contains(val.toLowerCase())) {
                           _searchList.add(i);
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                   )
-                : const Text('We Chat'),
+                : const Text('Chathub'),
             actions: [
               IconButton(
                 onPressed: () {
@@ -181,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
         contentPadding: const EdgeInsets.only(
           left: 24,
           right: 24,
-          top: 20,
+          top: 10,
           bottom: 10,
         ),
         shape: RoundedRectangleBorder(
@@ -194,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.blue,
               size: 28,
             ),
-            Text('  Add User')
+            Text('  Add Friend')
           ],
         ),
         content: TextFormField(
@@ -215,10 +216,14 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: const Text(
               'Cancel',
-              style: TextStyle(color: Colors.blue, fontSize: 16),
+              style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
           MaterialButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            color: Colors.blue,
             onPressed: () async {
               Navigator.pop(context);
               if (email.isNotEmpty) {
@@ -237,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Text(
               'Add',
               style: TextStyle(
-                color: Colors.blue,
+                color: Colors.white,
                 fontSize: 16,
               ),
             ),

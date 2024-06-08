@@ -23,10 +23,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'We Chat',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            appBarTheme: const AppBarTheme(
+      title: 'We Chat',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
           centerTitle: true,
           elevation: 1,
           iconTheme: IconThemeData(color: Colors.black),
@@ -36,8 +36,10 @@ class MyApp extends StatelessWidget {
             fontSize: 19,
           ),
           backgroundColor: Colors.white,
-        )),
-        home: const SplastScreen());
+        ),
+      ),
+      home: const SplastScreen(),
+    );
   }
 }
 

@@ -10,7 +10,6 @@ import '../helper/format_date.dart';
 import '../main.dart';
 import '../models/message.dart';
 
-// for showing single message details
 class MessageCard extends StatefulWidget {
   const MessageCard({super.key, required this.message});
 
@@ -25,10 +24,14 @@ class _MessageCardState extends State<MessageCard> {
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
     return InkWell(
-        onLongPress: () {
-          _showBottomSheet(isMe);
-        },
-        child: isMe ? _greenMessage() : _blueMessage());
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      onLongPress: () {
+        _showBottomSheet(isMe);
+      },
+      child: isMe ? _greenMessage() : _blueMessage(),
+    );
   }
 
   Widget _blueMessage() {
@@ -61,6 +64,8 @@ class _MessageCardState extends State<MessageCard> {
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: CachedNetworkImage(
+                      width: mq.width * .4,
+                      height: mq.height * .3,
                       imageUrl: widget.message.msg,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const Padding(
@@ -110,27 +115,28 @@ class _MessageCardState extends State<MessageCard> {
             margin: EdgeInsets.symmetric(
                 horizontal: mq.width * .04, vertical: mq.height * .01),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 218, 255, 176),
-                border: Border.all(color: Colors.lightGreen),
-                //making borders curved
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30))),
+              color: const Color.fromARGB(255, 218, 255, 176),
+              border: Border.all(color: Colors.lightGreen),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+              ),
+            ),
             child: widget.message.type == Type.text
-                ?
-                //show text
-                Text(
+                ? Text(
                     widget.message.msg,
                     style: const TextStyle(fontSize: 15, color: Colors.black87),
                   )
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: CachedNetworkImage(
+                      width: mq.width * .4,
+                      height: mq.height * .3,
                       imageUrl: widget.message.msg,
                       placeholder: (context, url) => const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: CircularProgressIndicator(strokeWidth: 1),
                       ),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.image, size: 70),
@@ -142,7 +148,6 @@ class _MessageCardState extends State<MessageCard> {
     );
   }
 
-  // bottom sheet for modifying message details
   void _showBottomSheet(bool isMe) {
     showModalBottomSheet(
         context: context,
@@ -182,12 +187,13 @@ class _MessageCardState extends State<MessageCard> {
                 ),
               if (widget.message.type == Type.text && isMe)
                 _OptionItem(
-                    icon: const Icon(Icons.edit, color: Colors.blue, size: 26),
-                    name: 'Edit Message',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showMessageUpdateDialog();
-                    }),
+                  icon: const Icon(Icons.edit, color: Colors.blue, size: 26),
+                  name: 'Edit Message',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showMessageUpdateDialog();
+                  },
+                ),
               if (isMe)
                 _OptionItem(
                     icon: const Icon(Icons.delete_forever,
@@ -280,7 +286,6 @@ class _MessageCardState extends State<MessageCard> {
   }
 }
 
-//custom options card (for copy, edit, delete, etc.)
 class _OptionItem extends StatelessWidget {
   final Icon icon;
   final String name;

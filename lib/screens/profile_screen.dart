@@ -4,7 +4,6 @@ import 'package:chat/main.dart';
 import 'package:chat/models/chat_user.dart';
 import 'package:chat/screens/auth/login_screen.dart';
 import 'package:chat/screens/edit_profile_screen.dart';
-import 'package:chat/widgets/chat_user_card.dart';
 import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
