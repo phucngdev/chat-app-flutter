@@ -6,7 +6,7 @@
 ## Getting Started
 
 yêu cầu có sẵn môi trường chạy flutter
-dứoi đây là hướng dẫn chạy dự án với VScode
+dứoi đây là hướng dẫn chạy dự án với VScode và ios simulator
 
 clone mã nguồn từ github
 

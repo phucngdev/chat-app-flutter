@@ -18,7 +18,7 @@ class ChatUserCard extends StatefulWidget {
 }
 
 class _ChatUserCardState extends State<ChatUserCard> {
-  Message? _message;
+  Message? _message; // để gán tin nhắn cuối cùng
   @override
   Widget build(BuildContext context) {
     return Card(
